@@ -5,10 +5,49 @@ import './App.css'
 import { MainInput }  from './MainInput'
 import QRCode from "qrcode";
 import { QRCanvas } from './QRCanvas'
+import vetprimeLogoVertical from './assets/vetprime_logo_vertical.png'
 
 export default function App() {
 
-  // const [url, setURL] = useState("")
+  const [logoSrc, setLogoSrc] = useState(vetprimeLogoVertical);
+  const [url, setUrl] = useState("");
+
+  function handleLogoUpload(e) {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setLogoSrc(event.target?.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function handleResetLogo() {
+    setLogoSrc(vetprimeLogoVertical);
+    setUrl("");
+    const urlInput = document.getElementById('urlinput');
+    if (urlInput) urlInput.value = "";
+    const canvas = document.getElementById('canvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  function triggerFileInput() {
+    document.getElementById('logoInput')?.click();
+  }
+
+  function handleGenerateClick() {
+    const urlInput = document.getElementById('urlinput');
+    const urlValue = urlInput?.value.trim();
+    if (!urlValue) {
+      alert('Please enter a URL');
+      return;
+    }
+    generateQR(urlValue);
+  }
 
   function generateQR(url) {
     // e.preventDefault()
@@ -25,23 +64,23 @@ export default function App() {
       }
 
       // draw a small logo/image in the centre of the QR code
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        const logo = new Image();
-        // use a relative path from public/ or assets folder
-        logo.src = 'src/assets/vetprime_logo_vertical.png';
-        logo.onload = () => {
-          const size = 80; // px, change as needed
-          const x = (canvas.width - size) / 2;
-          const y = (canvas.height - size) / 2;
-          ctx.drawImage(logo, x, y, size, size);
-        };
-        logo.onerror = () => {
-          console.warn('logo failed to load');
-        };
+      if (logoSrc) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          const logo = new Image();
+          logo.src = logoSrc;
+          logo.onload = () => {
+            const size = 80; // px, change as needed
+            const x = (canvas.width - size) / 2;
+            const y = (canvas.height - size) / 2;
+            ctx.drawImage(logo, x, y, size, size);
+          };
+          logo.onerror = () => {
+            console.warn('logo failed to load');
+          };
+        }
       }
 
-      alert("success!");
     });
 
   }
@@ -55,6 +94,28 @@ export default function App() {
         </div>
       </header>
 
+      <aside className="controls">
+        <div className="controls-inner">
+          <MainInput generateQR={generateQR} />
+          <div className="logo-upload">
+            <label htmlFor="logoInput">Upload Logo (JPG/PNG):</label>
+            <input
+              id="logoInput"
+              type="file"
+              accept=".jpg,.jpeg,.png"
+              onChange={handleLogoUpload}
+              style={{ display: 'none' }}
+            />
+            {logoSrc && logoSrc !== vetprimeLogoVertical && <p className="logo-preview-text">✓ Logo uploaded</p>}
+            <div className="button-group">
+              <button onClick={triggerFileInput} className="upload-btn">Upload Logo</button>
+              <button onClick={handleResetLogo} className="reset-btn">Reset</button>
+            </div>
+            <button onClick={handleGenerateClick} className="generate-btn">Generate</button>
+          </div>
+        </div>
+      </aside>
+    <br />
       <main className="app-content">
         <section className="qr-card">
           <div className="QRcontainer">
@@ -66,14 +127,9 @@ export default function App() {
           </div>
         </section>
 
-        <aside className="controls">
-          <div className="controls-inner">
-            <MainInput generateQR={generateQR} />
-          </div>
-        </aside>
+        
       </main>
 
-      <footer className="app-footer">Made with ❤️</footer>
     </div>
   )
 }

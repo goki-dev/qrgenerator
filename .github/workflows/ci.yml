@@ -1,0 +1,40 @@
+name: QR App CI
+
+#Runs CI when you:
+#push to main
+#open/update a pull request
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# “job” = one pipeline run
+#Uses a Linux VM to execute your steps
+#starting on "Checkout code": This pulls your repo into the runner
+#starting on "Setup Node": Ensures consistent Node version (very important in CI)
+#starting on "Install dependencies": npm install Same as running locally
+#starting on "Build project": This is your main CI check. If build fails → pipeline fails 
+#starting on "Run tests": Run tests (if you have any)
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+        steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+      
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run tests
+        run: npm test -- --watchAll=false

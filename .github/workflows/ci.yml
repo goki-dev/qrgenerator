@@ -10,6 +10,8 @@ on:
   pull_request:
     branches: [main]
 
+
+#INDENTION MATTERS in YAML! Be careful with spaces/tabs
 # “job” = one pipeline run
 #Uses a Linux VM to execute your steps
 #starting on "Checkout code": This pulls your repo into the runner
@@ -21,20 +23,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-        steps:
+    steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: 18
-      
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
       - name: Install dependencies
         run: npm install
 
       - name: Build project
         run: npm run build
 
+      # Optional
       - name: Run tests
         run: npm test -- --watchAll=false

@@ -22,7 +22,7 @@ export default function App() {
       reader.readAsDataURL(file);
     }
   }
-testbug()
+
   function handleResetLogo() {
     setLogoSrc(vetprimeLogoVertical);
     setUrl("");

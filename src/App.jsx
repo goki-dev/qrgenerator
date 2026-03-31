@@ -56,7 +56,10 @@ export default function App() {
     if (!canvas) return;
 
     // specify a higher width so the generated image fills the larger canvas
-    const opts = { width: 400 };
+    const opts = { 
+      width: 400,
+      errorCorrectionLevel: 'H' // use high error correction to allow for the logo overlay 
+    };
     QRCode.toCanvas(canvas, url, opts, (error) => {
       if (error) {
         alert(error);

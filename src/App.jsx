@@ -22,10 +22,10 @@ export default function App() {
       reader.readAsDataURL(file);
     }
     //this will deliberately cause an error to test build validation
-    sampleBug
+    
 
   }
-
+sampleBug();
   function handleResetLogo() {
     setLogoSrc(vetprimeLogoVertical);
     setUrl("");

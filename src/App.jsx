@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { MainInput }  from './MainInput'
 import QRCode from "qrcode";
@@ -10,7 +8,7 @@ import vetprimeLogoVertical from './assets/vetprime_logo_vertical.png'
 export default function App() {
 
   const [logoSrc, setLogoSrc] = useState(vetprimeLogoVertical);
-  const [url, setUrl] = useState("");
+  // const [url, setUrl] = useState("");
 
   function handleLogoUpload(e) {
     const file = e.target.files?.[0];
@@ -25,7 +23,8 @@ export default function App() {
 
   function handleResetLogo() {
     setLogoSrc(vetprimeLogoVertical);
-    setUrl("");
+    // setUrl("");
+    // const urlInput = url;
     const urlInput = document.getElementById('urlinput');
     if (urlInput) urlInput.value = "";
     const canvas = document.getElementById('canvas');
@@ -87,7 +86,7 @@ export default function App() {
     });
 
   }
-  
+
   return (
     <div className="app-root">
       <header className="app-header">
@@ -97,6 +96,7 @@ export default function App() {
         </div>
       </header>
 
+      {/* <aside> and <main> are semantic tags. Like labeled DIVs that is used for SEO */}
       <aside className="controls">
         <div className="controls-inner">
           <MainInput generateQR={generateQR} />

@@ -4,6 +4,11 @@ name: QR App CI
 #push to main
 #open/update a pull request
 
+#you can do something like this if you have multiple branches
+#branches:
+#  - main
+#  - develop
+
 on:
   push:
     branches: [main]
@@ -20,10 +25,13 @@ on:
 #starting on "Build project": This is your main CI check. If build fails → pipeline fails 
 #starting on "Run tests": Run tests (if you have any)
 jobs:
-  build:
+  customBuildStep1:
     runs-on: ubuntu-latest
-
+    #OR you can use a container with Node 20 to ensure consistent environment
+    #container:
+    #  image: node:20
     steps:
+      #these lines taht start with "- name" are just for readability in the GitHub Actions UI, they don't affect functionality
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -41,3 +49,4 @@ jobs:
       # Optional
       - name: Run tests
         run: npm test -- --watchAll=false
+      

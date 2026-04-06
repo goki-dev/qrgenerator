@@ -1,11 +1,16 @@
-import { useRef } from 'react';
 
-export function QRCanvas( { generateQR } ) 
+export function QRCanvas( { onDownload } ) 
 {
-    const canvasRef = useRef(null);
     return (
     <>
-       <canvas id="canvas" ref={canvasRef} className="QRcontainer"></canvas>
+    
+        <div className="QRcontainer">
+            {/* explicit width/height attributes ensure the canvas drawing buffer is large enough */}
+            <canvas id="canvas" className="qr-canvas" width="400" height="400" aria-label="QR preview"></canvas>
+       </div>
+       <div className="qr-meta">
+            <button onClick={onDownload} className="download-btn">Download QR Code</button>
+       </div>
     </>
     )
 }

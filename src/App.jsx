@@ -4,10 +4,12 @@ import { MainInput }  from './MainInput'
 import QRCode from "qrcode";
 import { QRCanvas } from './QRCanvas'
 import vetprimeLogoVertical from './assets/vetprime_logo_vertical.png'
+import bgtile from './assets/3pxtile.png'
 
 export default function App() {
 
   const [logoSrc, setLogoSrc] = useState(vetprimeLogoVertical);
+  const [qrGenerated, setQrGenerated] = useState(false);
   // const [url, setUrl] = useState("");
 
   function handleLogoUpload(e) {
@@ -23,6 +25,7 @@ export default function App() {
 
   function handleResetLogo() {
     setLogoSrc(vetprimeLogoVertical);
+    setQrGenerated(false);
     // setUrl("");
     // const urlInput = url;
     const urlInput = document.getElementById('urlinput');
@@ -32,6 +35,19 @@ export default function App() {
       const ctx = canvas.getContext('2d');
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
     }
+  }
+
+  function handleDownload() {
+    if (!qrGenerated) {
+      alert('Please generate a QR code first');
+      return;
+    }
+    const canvas = document.getElementById('canvas');
+    if (!canvas) return;
+    const link = document.createElement('a');
+    link.download = 'qr-code.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
   }
 
   function triggerFileInput() {
@@ -62,8 +78,10 @@ export default function App() {
     QRCode.toCanvas(canvas, url, opts, (error) => {
       if (error) {
         alert(error);
+        setQrGenerated(false);
         return;
       }
+      setQrGenerated(true);
 
       // draw a small logo/image in the centre of the QR code
       if (logoSrc) {
@@ -89,6 +107,19 @@ export default function App() {
 
   return (
     <div className="app-root">
+     
+      {/* Noise Layer */}
+      <div className="pointer-events-none fixed inset-0 opacity-20"
+          style={{
+            backgroundImage: `url(${bgtile})`,
+            backgroundRepeat: 'repeat',
+            zIndex: -1,
+          }}
+        />
+
+    <div className="pointer-events-none absolute w-96 h-96 bg-purple-500/20 blur-3xl rounded-full top-20 left-20"
+      style={{ zIndex: -1 }} />
+
       <header className="app-header">
         <div className="brand">
           <h1>QR Generator</h1>
@@ -121,18 +152,13 @@ export default function App() {
     <br />
       <main className="app-content">
         <section className="qr-card">
-          <div className="QRcontainer">
-            {/* explicit width/height attributes ensure the canvas drawing buffer is large enough */}
-            <canvas id="canvas" className="qr-canvas" width="400" height="400" aria-label="QR preview"></canvas>
-          </div>
-          <div className="qr-meta">
-            <p className="hint">Preview</p>
-          </div>
+          <QRCanvas onDownload={handleDownload} />
         </section>
-
-        
       </main>
 
+
+
+      
     </div>
   )
 }

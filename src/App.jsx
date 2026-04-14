@@ -117,7 +117,7 @@ export default function App() {
           }}
         />
 
-    <div className="pointer-events-none absolute w-96 h-96 bg-purple-500/20 blur-3xl rounded-full top-20 left-20"
+    <div className="pointer-events-none absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-250 bg-purple-500/20 blur-3xl rounded-full"
       style={{ zIndex: -1 }} />
 
       <header className="app-header">
@@ -135,6 +135,7 @@ export default function App() {
             <label htmlFor="logoInput">Upload Logo (JPG/PNG):</label>
             <input
               id="logoInput"
+              data-testid="logoInput"
               type="file"
               accept=".jpg,.jpeg,.png"
               onChange={handleLogoUpload}

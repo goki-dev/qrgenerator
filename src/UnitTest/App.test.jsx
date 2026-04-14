@@ -5,7 +5,10 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import App from '../App'
 
-// Mock the qrcode library to avoid actual QR generation in tests
+// Mock the qrcode library to avoid actual QR generation in tests. This replaces the real QR code library with a fake one.
+// vi.mock(...) → tells Vitest to replace a module
+// toCanvas → fake function
+// callback(null) → simulates success (no error)
 vi.mock('qrcode', () => ({
   default: {
     toCanvas: vi.fn((canvas, url, opts, callback) => {
@@ -20,7 +23,7 @@ class MockFileReader {
     this.result = ''
   }
 
-  readAsDataURL(file) {
+  readAsDataURL() {
     if (typeof this.onload === 'function') {
       this.onload({ target: { result: 'data:image/png;base64,mockdata' } })
     }
